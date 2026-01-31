@@ -1,3 +1,5 @@
+books = []  # list of dicts (each dict represents one book)
+
 def read_int(prompt: str) -> int:
     while True:
         try:
@@ -17,6 +19,33 @@ def show_menu():
     print("7) Search Book")
     print("8) Save & Exit")
 
+def add_book():
+    book_id = read_int("Enter book id: ")
+    title = input("Enter title: ").strip()
+    author = input("Enter author: ").strip()
+
+    book = {
+        "book_id": book_id,
+        "title": title,
+        "author": author,
+        "is_available": True
+    }
+
+    books.append(book)
+    print("Book added successfully!")
+
+    
+def list_books():
+    if len(books) == 0:
+        print("No books found.")
+        return
+
+    print("\n--- Books List ---")
+    for b in books:
+        status = "Available" if b["is_available"] else "Borrowed"
+        print(f'ID: {b["book_id"]} | Title: {b["title"]} | Author: {b["author"]} | Status: {status}')
+
+
 
 def main():
     while True:
@@ -24,9 +53,9 @@ def main():
         choice = read_int("Choose an option (1-8): ")
 
         if choice == 1:
-            print("TODO: Add Book")
+            add_book()
         elif choice == 2:
-            print("TODO: List Books")
+            list_books()
         elif choice == 3:
             print("TODO: Register Member")
         elif choice == 4:
@@ -38,7 +67,7 @@ def main():
         elif choice == 7:
             print("TODO: Search Book")
         elif choice == 8:
-            print(" Saving... Goodbye")
+            print("Saving... Goodbye")
             break
         else:
             print("Invalid option. Choose 1-8.")
