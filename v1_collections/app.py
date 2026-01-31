@@ -1,4 +1,5 @@
 books = []  # list of dicts (each dict represents one book)
+members = []  # list of dicts (each dict represents one member)
 
 def read_int(prompt: str) -> int:
     while True:
@@ -45,6 +46,26 @@ def list_books():
         status = "Available" if b["is_available"] else "Borrowed"
         print(f'ID: {b["book_id"]} | Title: {b["title"]} | Author: {b["author"]} | Status: {status}')
 
+def register_member():
+    member_id = read_int("Enter member id: ")
+    name = input("Enter member name: ").strip()
+
+    member = {
+        "member_id": member_id,
+        "name": name
+    }
+
+    members.append(member)
+    print("Member registered successfully!")
+
+def list_members():
+    if len(members) == 0:
+        print("No members found.")
+        return
+
+    print("\n--- Members List ---")
+    for m in members:
+        print(f'ID: {m["member_id"]} | Name: {m["name"]}')
 
 
 def main():
@@ -57,9 +78,9 @@ def main():
         elif choice == 2:
             list_books()
         elif choice == 3:
-            print("TODO: Register Member")
+            register_member()
         elif choice == 4:
-            print("TODO: List Members")
+            list_members()
         elif choice == 5:
             print("TODO: Borrow Book")
         elif choice == 6:
