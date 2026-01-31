@@ -1,5 +1,6 @@
 books = []  # list of dicts (each dict represents one book)
 members = []  # list of dicts (each dict represents one member)
+loans = []
 
 def read_int(prompt: str) -> int:
     while True:
@@ -20,6 +21,8 @@ def show_menu():
     print("7) Search Book")
     print("8) Save & Exit")
 
+
+#_______________________________________
 def add_book():
     book_id = read_int("Enter book id: ")
     title = input("Enter title: ").strip()
@@ -46,6 +49,8 @@ def list_books():
         status = "Available" if b["is_available"] else "Borrowed"
         print(f'ID: {b["book_id"]} | Title: {b["title"]} | Author: {b["author"]} | Status: {status}')
 
+
+#_______________________________________
 def register_member():
     member_id = read_int("Enter member id: ")
     name = input("Enter member name: ").strip()
@@ -68,6 +73,105 @@ def list_members():
         print(f'ID: {m["member_id"]} | Name: {m["name"]}')
 
 
+#_______________________________________
+def find_book_by_id(book_id: int):
+    for b in books:
+        if b["book_id"] == book_id:
+            return b
+    return None
+
+def find_member_by_id(member_id: int):
+    for m in members:
+        if m["member_id"] == member_id:
+            return m
+    return None
+
+def find_active_loan_by_book_id(book_id: int):
+    # active loan = book is currently borrowed
+    for loan in loans:
+        if loan["book_id"] == book_id:
+            return loan
+    return None
+
+
+from datetime import date  
+def borrow_book():
+    member_id = read_int("Enter member id: ")
+    book_id = read_int("Enter book id: ")
+
+    member = find_member_by_id(member_id)
+    if member is None:
+        print("Error: Member not found.")
+        return
+
+    book = find_book_by_id(book_id)
+    if book is None:
+        print("Error: Book not found.")
+        return
+
+    if book["is_available"] is False:
+        print("Error: Book is already borrowed.")
+        return
+
+    # create new loan
+    loan_id = len(loans) + 1
+    loan = {
+        "loan_id": loan_id,
+        "member_id": member_id,
+        "book_id": book_id,
+        "date": date.today().isoformat()
+    }
+
+    loans.append(loan)
+    book["is_available"] = False
+    print("Book borrowed successfully!")
+
+
+def return_book():
+    book_id = read_int("Enter book id to return: ")
+
+    book = find_book_by_id(book_id)
+    if book is None:
+        print("Error: Book not found.")
+        return
+
+    active_loan = find_active_loan_by_book_id(book_id)
+    if active_loan is None:
+        print("Error: This book is not currently borrowed.")
+        return
+
+    # remove loan record
+    loans.remove(active_loan)
+    book["is_available"] = True
+    print("Book returned successfully!")
+
+
+#_______________________________________
+def search_book():
+    keyword = input("Enter title or author keyword: ").strip().lower()
+
+    if keyword == "":
+        print("Keyword cannot be empty.")
+        return
+
+    results = []
+    for b in books:
+        title = b["title"].lower()
+        author = b["author"].lower()
+        if keyword in title or keyword in author:
+            results.append(b)
+
+    if len(results) == 0:
+        print("No matching books found.")
+        return
+
+    print("\n--- Search Results ---")
+    for b in results:
+        status = "Available" if b["is_available"] else "Borrowed"
+        print(f'ID: {b["book_id"]} | Title: {b["title"]} | Author: {b["author"]} | Status: {status}')
+
+
+#_______________________________________
 def main():
     while True:
         show_menu()
@@ -78,15 +182,15 @@ def main():
         elif choice == 2:
             list_books()
         elif choice == 3:
-            register_member()
+         register_member()
         elif choice == 4:
             list_members()
         elif choice == 5:
-            print("TODO: Borrow Book")
+            borrow_book()
         elif choice == 6:
-            print("TODO: Return Book")
+            return_book()
         elif choice == 7:
-            print("TODO: Search Book")
+            search_book()
         elif choice == 8:
             print("Saving... Goodbye")
             break
