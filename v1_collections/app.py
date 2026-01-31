@@ -2,6 +2,15 @@ books = []  # list of dicts (each dict represents one book)
 members = []  # list of dicts (each dict represents one member)
 loans = []
 
+import json
+import os
+
+DATA_DIR = "data"
+BOOKS_FILE = os.path.join(DATA_DIR, "books.json")
+MEMBERS_FILE = os.path.join(DATA_DIR, "members.json")
+LOANS_FILE = os.path.join(DATA_DIR, "loans.json")
+
+
 def read_int(prompt: str) -> int:
     while True:
         try:
@@ -170,6 +179,35 @@ def search_book():
         status = "Available" if b["is_available"] else "Borrowed"
         print(f'ID: {b["book_id"]} | Title: {b["title"]} | Author: {b["author"]} | Status: {status}')
 
+
+#_______________________________________
+def load_list(path: str):
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        print(f"Warning: could not load {path}. Starting empty.")
+        return []
+
+
+def save_list(path: str, data):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+def load_data():
+    global books, members, loans
+    books = load_list(BOOKS_FILE)
+    members = load_list(MEMBERS_FILE)
+    loans = load_list(LOANS_FILE)
+
+
+def save_data():
+    save_list(BOOKS_FILE, books)
+    save_list(MEMBERS_FILE, members)
+    save_list(LOANS_FILE, loans)
 
 #_______________________________________
 def main():
