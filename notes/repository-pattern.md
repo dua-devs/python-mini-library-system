@@ -39,6 +39,6 @@ In my Mini Library System, there are 3 parts:
 
 Why it’s useful:
 - cleaner code (logic separated from data access)
-- easier to change storage later (JSON → DB)
+- easier to change storage later (JSON \ DB)
 - easier testing (can use a fake repository)
 - less repeated file read/write code
