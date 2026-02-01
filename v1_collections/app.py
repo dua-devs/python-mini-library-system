@@ -5,7 +5,9 @@ loans = []
 import json
 import os
 
-DATA_DIR = "data"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+
 BOOKS_FILE = os.path.join(DATA_DIR, "books.json")
 MEMBERS_FILE = os.path.join(DATA_DIR, "members.json")
 LOANS_FILE = os.path.join(DATA_DIR, "loans.json")
@@ -211,6 +213,7 @@ def save_data():
 
 #_______________________________________
 def main():
+    load_data()
     while True:
         show_menu()
         choice = read_int("Choose an option (1-8): ")
@@ -230,6 +233,7 @@ def main():
         elif choice == 7:
             search_book()
         elif choice == 8:
+            save_data()
             print("Saving... Goodbye")
             break
         else:
